@@ -18,8 +18,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
-
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+  'disaster-broadcaster.herokuapp.com',
+  '127.0.0.1'
+]
 
 
 # Application definition
