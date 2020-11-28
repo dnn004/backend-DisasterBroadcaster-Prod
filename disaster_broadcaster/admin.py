@@ -3,6 +3,8 @@ from django.utils.translation import ugettext, ugettext_lazy as _
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
+from disaster_broadcaster.serializers.User import UserCreateSerializer, UserUpdateSerializer
+
 from .models.User import User
 from .models.Post import Post
 from .models.Comment import Comment
@@ -14,6 +16,7 @@ from .models.Disaster import Disaster
 from .models.Country import Country
 from .models.Organization import Organization
 
+
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
   readonly_fields=('last_login',)
@@ -24,13 +27,27 @@ class UserAdmin(admin.ModelAdmin):
 
   fieldsets = (
     (None, {'fields': ('username', 'password')}),
-    (_('Personal info'), {'fields': ('email', 'avatar',)}),
+    (_('Personal info'), {'fields': ('email', 'avatar', 'country_id', 'answer', )}),
     (_('Permissions'), {'fields': ['is_deleted']}),
     (_('Important dates'), {'fields': ('last_login',)}),
   )
 
   ordering = ('id', 'username',)
   save_on_top = True
+
+  def save_model(self, request, obj, form, change):
+    data = request.POST.dict()
+    if data.get('avatar') == '':
+      del data['avatar']
+
+    if not change:
+      serializer = UserCreateSerializer(data=data)
+      if serializer.is_valid(raise_exception=True):
+        serializer.save()
+    else:
+      serializer = UserUpdateSerializer(obj, data)
+      if serializer.is_valid(raise_exception=True):
+        serializer.save()
 
 class PostInLine(admin.TabularInline):
   model = Post
@@ -65,7 +82,7 @@ class NewsAdmin(admin.ModelAdmin):
 
 @admin.register(Fund)
 class FundAdmin(admin.ModelAdmin):
-  list_display = ('id', 'disaster_id', 'organization_id', 'date_created',)
+  list_display = ('id', 'disaster_id', 'organization_id', 'fund_page', 'date_created',)
   save_on_top = True
 
 @admin.register(Category)
