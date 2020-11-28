@@ -21,11 +21,15 @@ class PostViewset(viewsets.ViewSet):
     country_id = request.GET.get('country')
     personal = request.GET.get('personal')
     posts = Post.objects.all()
+
     if country_id is not None:
+      # Filter posts by country
       posts = posts.filter(country_id=country_id)
     elif personal is not None:
+      # Filter for posts made by the current user
       posts = posts.filter(user_id=request.user.id)
 
+    # Newest first
     posts = posts.order_by('-date_created')
     if page is not None:
       posts = paginate(posts, page)

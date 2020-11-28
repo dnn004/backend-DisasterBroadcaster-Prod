@@ -74,6 +74,7 @@ class User(AbstractBaseUser, PermissionsMixin):
       self.avatar = saved_avatar
       super(User, self).save()
     else:
+      # Delete old avatar from S3
       if os.environ.get('DJANGO_DEBUG') == 'False':
         s3_delete('media/user/' + str(self.pk) + '/' + str(self.avatar))
       super(User, self).save()

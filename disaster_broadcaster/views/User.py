@@ -48,6 +48,8 @@ class UserViewset(viewsets.ViewSet):
     new_password = request.data.get('new_password')
 
     if old_password is None and new_password is None:
+      # If request is for updating user info that is not password
+
       # Check if loggedin user is the user requesting to update profile
       # Commented out for development easy testing, uncomment in production
       # if request.user != user.id:
@@ -57,6 +59,7 @@ class UserViewset(viewsets.ViewSet):
         serializer.save()
       return Response(serializer.data, status=status.HTTP_200_OK)
     else:
+      # if request is for resetting password
       authenticated = user.check_password_auth(old_password)
       if authenticated:
         request.data['password'] = new_password

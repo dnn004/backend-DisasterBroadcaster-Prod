@@ -1,9 +1,10 @@
+import os
 from django.utils.translation import ugettext, ugettext_lazy as _
 
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
-from disaster_broadcaster.serializers.User import UserCreateSerializer, UserUpdateSerializer
+from disaster_broadcaster.bucket_delete import s3_delete
 
 from .models.User import User
 from .models.Post import Post
@@ -16,18 +17,21 @@ from .models.Disaster import Disaster
 from .models.Country import Country
 from .models.Organization import Organization
 
+from disaster_broadcaster.serializers.User import UserCreateSerializer, UserUpdateSerializer
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
   readonly_fields=('last_login',)
 
+  # Fields visible for display
   list_display = ('id', 'username', 'password', 'email', 'avatar', 'country_id', 'answer', 'date_created', 'date_updated', 'is_deleted')
   list_filter = ('username', 'email')
   search_fields = ['username', 'email']
 
+  # Fields visible for input
   fieldsets = (
     (None, {'fields': ('username', 'password')}),
-    (_('Personal info'), {'fields': ('email', 'avatar', 'country_id', 'answer', )}),
+    (_('Personal info'), {'fields': ('avatar', 'email', 'country_id', 'answer', )}),
     (_('Permissions'), {'fields': ['is_deleted']}),
     (_('Important dates'), {'fields': ('last_login',)}),
   )
@@ -37,14 +41,26 @@ class UserAdmin(admin.ModelAdmin):
 
   def save_model(self, request, obj, form, change):
     data = request.POST.dict()
+
+    # data['avatar'] is either '' or None
+    # if '', delete so UserCreateSerializer(data=data) doesn't raise init error
+    # if None, actually put in input avatar in obj to pass in
     if data.get('avatar') == '':
       del data['avatar']
+    elif data.get('avatar') is None:
+      data['avatar'] = obj.avatar
 
+    # change is boolean, True if user update, False if user create
     if not change:
       serializer = UserCreateSerializer(data=data)
       if serializer.is_valid(raise_exception=True):
         serializer.save()
     else:
+      # Delete old avatar from S3
+      user = User.objects.get(pk=obj.pk)
+      if os.environ.get('DJANGO_DEBUG') == 'False':
+        s3_delete('media/user/' + str(user.id) + '/' + str(user.avatar))
+
       serializer = UserUpdateSerializer(obj, data)
       if serializer.is_valid(raise_exception=True):
         serializer.save()

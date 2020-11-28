@@ -27,6 +27,7 @@ def LogoutUser(request):
   logout(request)
   return JsonResponse(data={}, status=status.HTTP_200_OK)
 
+# If user inputs the correct answer, send email with link to password reset page
 @csrf_exempt 
 def PasswordReset(request):
   data = json.loads(request.body)

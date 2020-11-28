@@ -22,8 +22,10 @@ class FundViewset(viewsets.ViewSet):
     organization_id = request.GET.get('organization')
     disaster_id = request.GET.get('disaster')
     if organization_id is not None:
+      # Filter for all funds by an organization
       funds = funds.fitler(organization_id=organization_id)
     elif disaster_id is not None:
+      # Filter for all funds related to a disaster
       funds = funds.fitler(disaster_id=disaster_id)
 
     funds = funds.order_by('-date_created')
