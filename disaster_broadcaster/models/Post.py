@@ -20,6 +20,5 @@ class Post(models.Model):
       self.media = saved_media
       super(Post, self).save(*args, **kwargs)
     else:
-      self.media
-      s3_delete('media/post/' + self.pk + "/" + str(self.media))
+      s3_delete('media/post/' + str(self.pk) + "/" + str(self.media))
       super(Post, self).save()
