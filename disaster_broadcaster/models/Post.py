@@ -1,7 +1,9 @@
 from disaster_broadcaster.filepaths.FilePath import FilePath
+from disaster_broadcaster.bucket_delete import s3_delete
 from disaster_broadcaster.models.User import User
 from disaster_broadcaster.models.Country import Country
 from django.db import models
+
 
 class Post(models.Model):
   user_id = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -9,3 +11,15 @@ class Post(models.Model):
   content = models.CharField(max_length=1024, blank=True, default=None)
   media = models.FileField(upload_to=FilePath.post_upload, null=True)
   date_created = models.DateTimeField(auto_now_add=True, null=True)
+
+  def save(self, *args, **kwargs):
+    if self.pk is None:
+      saved_media = self.media
+      self.media = None
+      super(Post, self).save(*args, **kwargs)
+      self.media = saved_media
+      super(Post, self).save(*args, **kwargs)
+    else:
+      key = str(self.media).split(".")[0]
+      s3_delete('media/post/' + key)
+      super(Post, self).save()

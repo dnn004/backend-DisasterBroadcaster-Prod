@@ -61,3 +61,12 @@ class User(AbstractBaseUser, PermissionsMixin):
   
   def check_password_auth(self, password):
     return self.check_password(password)
+
+  def save(self, *args, **kwargs):
+    if self.pk is None:
+      saved_avatar = self.avatar
+      self.avatar = None
+      super(User, self).save(*args, **kwargs)
+      self.avatar = saved_avatar
+      
+    super(User, self).save(*args, **kwargs)

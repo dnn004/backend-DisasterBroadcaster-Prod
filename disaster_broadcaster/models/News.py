@@ -12,3 +12,12 @@ class News(models.Model):
   headline = models.CharField(max_length=500)
   content = models.TextField()
   media = models.ImageField(upload_to=FilePath.news_upload, null=True)
+
+  def save(self, *args, **kwargs):
+    if self.pk is None:
+      saved_media = self.media
+      self.media = None
+      super(News, self).save(*args, **kwargs)
+      self.media = saved_media
+      
+    super(News, self).save(*args, **kwargs)

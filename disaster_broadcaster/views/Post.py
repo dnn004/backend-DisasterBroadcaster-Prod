@@ -34,6 +34,7 @@ class PostViewset(viewsets.ViewSet):
 
   # POST
   def create(self, request):
+    print("YES")
     serializer = PostCreateSerializer(data=request.data)
     if serializer.is_valid(raise_exception=True):
       serializer.save()

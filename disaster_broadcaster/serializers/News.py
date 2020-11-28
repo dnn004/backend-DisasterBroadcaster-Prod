@@ -30,7 +30,6 @@ class NewsUpdateSerializer(serializers.ModelSerializer):
     if data.get("url"): instance.url = data.get("url")
     if data.get("headline"): instance.headline = data.get("headline")
     if data.get("content"): instance.content = data.get("content")
-    if data.get("media"): instance.media = data.get("media")
 
-    instance.save()
+    super(News, instance).save()
     return instance

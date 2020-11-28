@@ -1,7 +1,7 @@
 class FilePath:
   @staticmethod
   def post_upload(instance, filename):
-    return "post/{}".format(instance.id)
+    return "post/{0}/{1}".format(instance.id, filename)
 
   @staticmethod
   def news_upload(instance, filename):

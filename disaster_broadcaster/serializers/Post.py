@@ -26,8 +26,7 @@ class PostUpdateSerializer(serializers.ModelSerializer):
 
   def update(self, instance:Post, data):
     if data.get("country_id"): instance.country_id = data.get("country_id")
-    if data.get("media"): instance.media = data.get("media")
     if data.get("content"): instance.content = data.get("content")
 
-    instance.save()
+    super(Post, instance).save()
     return instance

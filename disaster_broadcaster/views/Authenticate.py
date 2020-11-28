@@ -9,6 +9,7 @@ from disaster_broadcaster.serializers.User import UserGeneralSerializer, SALT
 import hashlib
 import json
 
+@csrf_exempt 
 def AuthenticateUser(request):
   data = json.loads(request.body)
   username = data['username']
@@ -21,6 +22,7 @@ def AuthenticateUser(request):
   else:
     return JsonResponse(data={}, status=status.HTTP_401_UNAUTHORIZED)
 
+@csrf_exempt 
 def LogoutUser(request):
   logout(request)
   return JsonResponse(data={}, status=status.HTTP_200_OK)
