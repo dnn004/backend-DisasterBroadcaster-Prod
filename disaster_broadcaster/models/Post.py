@@ -22,6 +22,6 @@ class Post(models.Model):
       self.media = saved_media
       super(Post, self).save()
     else:
-      if os.environ.get('DJANGO_DEBUG') == 'False':
-        s3_delete('media/post/' + str(self.pk) + "/" + str(self.media))
+      # if os.environ.get('DJANGO_DEBUG') == 'False':
+      #   s3_delete('media/post/' + str(self.pk) + "/" + str(self.media))
       super(Post, self).save()
