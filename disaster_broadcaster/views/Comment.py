@@ -17,13 +17,13 @@ class CommentViewset(viewsets.ViewSet):
 
   # GET
   def list(self, request):
-    page = request.GET.get("page")
-    post = request.GET.get("post")
+    page = request.GET.get('page')
+    post = request.GET.get('post')
     comments = Comment.objects.all()
     if post is not None:
       comments = comments.filter(post_id=post.id)
 
-    comments = comments.order_by("date_created")
+    comments = comments.order_by('date_created')
     if page is not None:
       comments = paginate(comments, page)
     serializer = CommentGeneralSerializer(comments, many=True)

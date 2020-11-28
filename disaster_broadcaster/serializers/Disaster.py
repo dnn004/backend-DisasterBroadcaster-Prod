@@ -6,7 +6,7 @@ from disaster_broadcaster.serializers.Category import CategoryGeneralSerializer
 class DisasterCreateSerializer(serializers.ModelSerializer):
   class Meta:
     model = Disaster
-    fields = "__all__"
+    fields = '__all__'
 
   def create(self, data):
     return Disaster.objects.create(**data)
@@ -14,7 +14,7 @@ class DisasterCreateSerializer(serializers.ModelSerializer):
 class DisasterGeneralSerializer(serializers.ModelSerializer):
   class Meta:
     model = Disaster
-    fields = "__all__"
+    fields = '__all__'
 
   country_id = CountryGeneralSerializer()
   category_id = CategoryGeneralSerializer()
@@ -22,11 +22,11 @@ class DisasterGeneralSerializer(serializers.ModelSerializer):
 class DisasterUpdateSerializer(serializers.ModelSerializer):
   class Meta:
     model = Disaster
-    fields = "__all__"
+    fields = '__all__'
 
   def update(self, instance:Disaster, data):
-    if data.get("country_id"): instance.country_id = data.get("country_id")
-    if data.get("category_id"): instance.category_id = data.get("category_id")
+    if data.get('country_id'): instance.country_id = data.get('country_id')
+    if data.get('category_id'): instance.category_id = data.get('category_id')
 
     instance.save()
     return instance

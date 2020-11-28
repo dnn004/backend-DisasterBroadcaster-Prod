@@ -17,16 +17,16 @@ class PostViewset(viewsets.ViewSet):
 
   # GET
   def list(self, request):
-    page = request.GET.get("page")
-    country_id = request.GET.get("country")
-    personal = request.GET.get("personal")
+    page = request.GET.get('page')
+    country_id = request.GET.get('country')
+    personal = request.GET.get('personal')
     posts = Post.objects.all()
     if country_id is not None:
       posts = posts.filter(country_id=country_id)
     elif personal is not None:
       posts = posts.filter(user_id=request.user.id)
 
-    posts = posts.order_by("-date_created")
+    posts = posts.order_by('-date_created')
     if page is not None:
       posts = paginate(posts, page)
     serializer = PostGeneralSerializer(posts, many=True)
@@ -34,7 +34,6 @@ class PostViewset(viewsets.ViewSet):
 
   # POST
   def create(self, request):
-    print("YES")
     serializer = PostCreateSerializer(data=request.data)
     if serializer.is_valid(raise_exception=True):
       serializer.save()

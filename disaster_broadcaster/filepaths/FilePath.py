@@ -5,9 +5,9 @@ class FilePath:
 
   @staticmethod
   def news_upload(instance, filename):
-    return "news/{}".format(instance.id)
+    return "news/{}/{}".format(instance.id, filename)
 
   @staticmethod
   def avatar(user, filename):
-    return "user/{}".format(user.id)
+    return "user/{}/{}".format(user.id, filename)
   

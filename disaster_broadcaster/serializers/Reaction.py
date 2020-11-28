@@ -6,7 +6,7 @@ from disaster_broadcaster.serializers.Post import PostGeneralSerializer
 class ReactionCreateSerializer(serializers.ModelSerializer):
   class Meta:
     model = Reaction
-    fields = "__all__"
+    fields = '__all__'
 
   def create(self, data):
     return Reaction.objects.create(**data)
@@ -14,7 +14,7 @@ class ReactionCreateSerializer(serializers.ModelSerializer):
 class ReactionGeneralSerializer(serializers.ModelSerializer):
   class Meta:
     model = Reaction
-    fields = "__all__"
+    fields = '__all__'
 
   user_id = UserGeneralSerializer()
   post_id = PostGeneralSerializer()
@@ -22,10 +22,10 @@ class ReactionGeneralSerializer(serializers.ModelSerializer):
 class ReactionUpdateSerializer(serializers.ModelSerializer):
   class Meta:
     model = Reaction
-    fields = "__all__"
+    fields = '__all__'
 
   def update(self, instance:Reaction, data):
-    if data.get("reaction"): instance.reaction = data.get("reaction")
+    if data.get('reaction'): instance.reaction = data.get('reaction')
 
     instance.save()
     return instance

@@ -17,7 +17,7 @@ class DisasterViewset(viewsets.ViewSet):
 
   # GET
   def list(self, request):
-    page = request.GET.get("page")
+    page = request.GET.get('page')
     disasters = Disaster.objects.all()
     if page is not None:
       disasters = paginate(disasters, page)

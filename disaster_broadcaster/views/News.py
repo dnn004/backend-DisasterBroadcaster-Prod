@@ -17,13 +17,13 @@ class NewsViewset(viewsets.ViewSet):
 
   # GET
   def list(self, request):
-    page = request.GET.get("page")
-    country_id = request.GET.get("country")
+    page = request.GET.get('page')
+    country_id = request.GET.get('country')
     news = News.objects.all()
     if country_id is not None:
       news = news.fitler(country_id=country_id)
 
-    news = news.order_by("-date_added")
+    news = news.order_by('-date_added')
     if page is not None:
       news = paginate(news, page)
     serializer = NewsGeneralSerializer(news, many=True)

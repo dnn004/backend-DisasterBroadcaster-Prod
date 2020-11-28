@@ -16,21 +16,21 @@ from disaster_broadcaster.views.Category import CategoryViewset
 
 
 router = routers.DefaultRouter()
-router.register("user", UserViewset, basename="user")
-router.register("reaction", ReactionViewset, basename="raction")
-router.register("post", PostViewset, basename="post")
-router.register("organization", OrganizationViewset, basename="organization")
-router.register("news", NewsViewset, basename="news")
-router.register("fund", FundViewset, basename="fund")
-router.register("disaster", DisasterViewset, basename="disaster")
-router.register("country", CountryViewset, basename="country")
-router.register("comment", CommentViewset, basename="comment")
-router.register("category", CategoryViewset, basename="category")
+router.register('user', UserViewset, basename='user')
+router.register('reaction', ReactionViewset, basename='raction')
+router.register('post', PostViewset, basename='post')
+router.register('organization', OrganizationViewset, basename='organization')
+router.register('news', NewsViewset, basename='news')
+router.register('fund', FundViewset, basename='fund')
+router.register('disaster', DisasterViewset, basename='disaster')
+router.register('country', CountryViewset, basename='country')
+router.register('comment', CommentViewset, basename='comment')
+router.register('category', CategoryViewset, basename='category')
 
 urlpatterns = [
-  url(r"^", include(router.urls)),
-  url(r"^user-authenticate/", AuthenticateUser),
-  url(r"^logout/", LogoutUser),
-  url(r"^password-reset/", PasswordReset)
+  url(r'^', include(router.urls)),
+  url(r'^user-authenticate/', AuthenticateUser),
+  url(r'^logout/', LogoutUser),
+  url(r'^password-reset/', PasswordReset)
 ]
 

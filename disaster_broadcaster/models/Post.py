@@ -1,3 +1,4 @@
+import os
 from disaster_broadcaster.filepaths.FilePath import FilePath
 from disaster_broadcaster.bucket_delete import s3_delete
 from disaster_broadcaster.models.User import User
@@ -12,13 +13,15 @@ class Post(models.Model):
   media = models.FileField(upload_to=FilePath.post_upload, null=True)
   date_created = models.DateTimeField(auto_now_add=True, null=True)
 
+  # Override save
   def save(self, *args, **kwargs):
     if self.pk is None:
       saved_media = self.media
       self.media = None
       super(Post, self).save(*args, **kwargs)
       self.media = saved_media
-      super(Post, self).save(*args, **kwargs)
+      super(Post, self).save()
     else:
-      s3_delete('media/post/' + str(self.pk) + "/" + str(self.media))
+      if os.environ.get('DJANGO_DEBUG') == 'False':
+        s3_delete('media/post/' + str(self.pk) + "/" + str(self.media))
       super(Post, self).save()

@@ -17,7 +17,7 @@ class OrganizationViewset(viewsets.ViewSet):
 
   # GET
   def list(self, request):
-    page = request.GET.get("page")
+    page = request.GET.get('page')
     orgs = Organization.objects.all()
     if page is not None:
       orgs = paginate(orgs, page)

@@ -17,7 +17,7 @@ class CountryViewset(viewsets.ViewSet):
 
   # GET
   def list(self, request):
-    page = request.GET.get("page")
+    page = request.GET.get('page')
     countries = Country.objects.all()
     if page is not None:
       countries = paginate(countries, page)

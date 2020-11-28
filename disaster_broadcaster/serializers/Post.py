@@ -6,7 +6,7 @@ from disaster_broadcaster.serializers.Country import CountryGeneralSerializer
 class PostCreateSerializer(serializers.ModelSerializer):
   class Meta:
     model = Post
-    fields = "__all__"
+    fields = '__all__'
 
   def create(self, data):
     return Post.objects.create(**data)
@@ -14,7 +14,7 @@ class PostCreateSerializer(serializers.ModelSerializer):
 class PostGeneralSerializer(serializers.ModelSerializer):
   class Meta:
     model = Post
-    fields = "__all__"
+    fields = '__all__'
 
   user_id = UserGeneralSerializer()
   country_id = CountryGeneralSerializer()
@@ -22,11 +22,11 @@ class PostGeneralSerializer(serializers.ModelSerializer):
 class PostUpdateSerializer(serializers.ModelSerializer):
   class Meta:
     model = Post
-    fields = "__all__"
+    fields = '__all__'
 
   def update(self, instance:Post, data):
-    if data.get("country_id"): instance.country_id = data.get("country_id")
-    if data.get("content"): instance.content = data.get("content")
+    if data.get('country_id'): instance.country_id = data.get('country_id')
+    if data.get('content'): instance.content = data.get('content')
 
     super(Post, instance).save()
     return instance

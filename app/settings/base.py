@@ -17,10 +17,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
-ALLOWED_HOSTS = [
-  'disaster-broadcaster.herokuapp.com',
-  'localhost'
-]
+ALLOWED_HOSTS = ['disaster-broadcaster.herokuapp.com']
 
 
 # Application definition
@@ -66,17 +63,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'app.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
 
 
 # Password validation
@@ -125,44 +111,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-
-
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 
-############# Local Development ##############
-# SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
 
-# # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'a@0$#)b8h7$zrsir8gclo+^1aon6zmpx8)=q-w^09nefy3#zw%'
 
-# EMAIL_HOST_USER = 'disaster.broadcaster@gmail.com'
-# EMAIL_HOST_PASSWORD = 'Eureka!!'
-
-################# Production #################
-import dj_database_url
-db_from_env = dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(db_from_env)
-DEBUG = False
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
-EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS')
-
-AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME = os.environ.get('S3_BUCKET_NAME')
-AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
-
-AWS_S3_OBJECT_PARAMETERS = {
-  'CacheControl': 'max-age=86400',
-}
-
-DEFAULT_FILE_STORAGE = 'app.storage_backends.MediaStorage'
-
-# AWS_LOCATION = 'static'
-# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-# STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)

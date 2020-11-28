@@ -4,7 +4,7 @@ from disaster_broadcaster.models.Organization import Organization
 class OrganizationCreateSerializer(serializers.ModelSerializer):
   class Meta:
     model = Organization
-    fields = "__all__"
+    fields = '__all__'
 
   def create(self, data):
     return Organization.objects.create(**data)
@@ -12,18 +12,18 @@ class OrganizationCreateSerializer(serializers.ModelSerializer):
 class OrganizationGeneralSerializer(serializers.ModelSerializer):
   class Meta:
     model = Organization
-    fields = "__all__"
+    fields = '__all__'
 
 class OrganizationUpdateSerializer(serializers.ModelSerializer):
   class Meta:
     model = Organization
-    fields = "__all__"
+    fields = '__all__'
 
   def update(self, instance:Organization, data):
-    if data.get("name"): instance.name = data.get("name")
-    if data.get("address"): instance.address = data.get("address")
-    if data.get("url"): instance.url = data.get("url")
-    if data.get("email"): instance.email = data.get("email")
+    if data.get('name'): instance.name = data.get('name')
+    if data.get('address'): instance.address = data.get('address')
+    if data.get('url'): instance.url = data.get('url')
+    if data.get('email'): instance.email = data.get('email')
 
     instance.save()
     return instance

@@ -9,7 +9,8 @@ from disaster_broadcaster.models.User import User
 from disaster_broadcaster.serializers.User import (
   UserCreateSerializer,
   UserGeneralSerializer,
-  UserUpdateSerializer
+  UserUpdateSerializer,
+  UserResetPasswordSerializer
 )
 
 class UserViewset(viewsets.ViewSet):
@@ -20,7 +21,7 @@ class UserViewset(viewsets.ViewSet):
 
   # GET
   def list(self, request):
-    page = request.GET.get("page")
+    page = request.GET.get('page')
     users = self.get_queryset()
     if page is not None:
       users = paginate(users, page)
@@ -43,14 +44,28 @@ class UserViewset(viewsets.ViewSet):
   # PATCH
   def partial_update(self, request, pk=None):
     user = get_object_or_404(self.get_queryset(), pk=pk)
-    # Check if loggedin user is the user requesting to update profile
-    # Commented out for development easy testing, uncomment in production
-    # if request.user != user.id:
-    #   return Response(data={}, status=status.HTTP_401_UNAUTHORIZED)
-    serializer = UserUpdateSerializer(user, request.data)
-    if serializer.is_valid(raise_exception=True):
-      serializer.save()
-    return Response(serializer.data, status=status.HTTP_200_OK)
+    old_password = request.data.get('password')
+    new_password = request.data.get('new_password')
+
+    if old_password is None and new_password is None:
+      # Check if loggedin user is the user requesting to update profile
+      # Commented out for development easy testing, uncomment in production
+      # if request.user != user.id:
+      #   return Response(data={}, status=status.HTTP_401_UNAUTHORIZED)
+      serializer = UserUpdateSerializer(user, request.data)
+      if serializer.is_valid(raise_exception=True):
+        serializer.save()
+      return Response(serializer.data, status=status.HTTP_200_OK)
+    else:
+      authenticated = user.check_password_auth(old_password)
+      if authenticated:
+        request.data['password'] = new_password
+        serializer = UserResetPasswordSerializer(user, request.data)
+        if serializer.is_valid(raise_exception=True):
+          serializer.save()
+        return Response({}, status=status.HTTP_200_OK)
+      else:
+        return Response(data={}, status=status.HTTP_401_UNAUTHORIZED)
 
   # DELETE
   def destroy(self, request, pk=None):

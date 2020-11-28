@@ -1,5 +1,7 @@
+import os
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractBaseUser,PermissionsMixin
+from disaster_broadcaster.bucket_delete import s3_delete
 from disaster_broadcaster.models.Country import Country
 from django.db import models
 from django.core.validators import RegexValidator
@@ -52,6 +54,7 @@ class User(AbstractBaseUser, PermissionsMixin):
   is_staff = models.BooleanField(default=False)
   is_superuser = models.BooleanField(default=False)
 
+  # Override delete
   def delete(self, using=None, keep_parents=False):
     """
     Soft deletion of Users
@@ -62,11 +65,15 @@ class User(AbstractBaseUser, PermissionsMixin):
   def check_password_auth(self, password):
     return self.check_password(password)
 
+  # Override save
   def save(self, *args, **kwargs):
     if self.pk is None:
       saved_avatar = self.avatar
       self.avatar = None
       super(User, self).save(*args, **kwargs)
       self.avatar = saved_avatar
-      
-    super(User, self).save(*args, **kwargs)
+      super(User, self).save()
+    else:
+      if os.environ.get('DJANGO_DEBUG') == 'False':
+        s3_delete('media/user/' + str(self.pk) + '/' + str(self.avatar))
+      super(User, self).save()
