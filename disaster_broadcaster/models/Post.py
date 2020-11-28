@@ -20,6 +20,6 @@ class Post(models.Model):
       self.media = saved_media
       super(Post, self).save(*args, **kwargs)
     else:
-      key = str(self.media).split(".")[0]
-      s3_delete('media/post/' + key)
+      self.media
+      s3_delete('media/post/' + self.pk + "/" + str(self.media))
       super(Post, self).save()
