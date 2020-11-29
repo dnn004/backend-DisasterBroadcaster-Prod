@@ -10,10 +10,10 @@
 	4. Run `virtualenv venv; source venv/bin/activate`. To deactivate virtualenv, just run `deactivate`
 		-	If you already ran the `virtualenv venv` command, then all you need to do is run `source venv/bin/activate`
 	5. Install dependencies `pip3 install -r requirements.txt`
-  6. IMPORTANT FOR LOCAL DEVELOPMENT:
-    - Put the provided local.py in ./app/settings/
-    - Put the provided local.sh in ./
-    - in ./ , enter `source local.s`" inside console
+  	6. IMPORTANT FOR LOCAL DEVELOPMENT:
+    		-	Put the provided local.py in ./app/settings/
+    		-	Put the provided local.sh in ./
+    		- =	In ./ , enter `source local.s`" inside console
 	6. Enter `migrate` inside console
 	7. Then enter `run` inside console and you can access the api at `localhost:8000/api/disaster-broadcaster/{endpoint}`
 
