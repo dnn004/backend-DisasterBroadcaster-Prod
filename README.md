@@ -1,4 +1,6 @@
-# !DO NOT WORK IN MAIN BRANCH! - Used for production only
+# !DO NOT WORK IN MASTER BRANCH! 
+# - Used for production only
+
 # Setup
 #### Backend:
 - Linux Machine: 
