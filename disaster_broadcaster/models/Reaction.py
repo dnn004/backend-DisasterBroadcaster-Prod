@@ -4,11 +4,11 @@ from django.db import models
 
 class Reaction(models.Model):
   REACTION_CHOICES = [
-    (1, 'Like'),
-    (2, 'Sad'),
-    (3, 'Love')
+    ('1', 'Like'),
+    ('2', 'Sad'),
+    ('3', 'Love')
   ]
 
   user_id = models.ForeignKey(User, on_delete=models.CASCADE)
   post_id = models.ForeignKey(Post, on_delete=models.CASCADE)
-  reaction = models.CharField(max_length=3, choices=REACTION_CHOICES, default=3)
+  reaction = models.CharField(max_length=3, choices=REACTION_CHOICES, default='3')

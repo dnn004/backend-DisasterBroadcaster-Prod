@@ -1,9 +1,7 @@
 from rest_framework import serializers
 from disaster_broadcaster.models.User import User
 import hashlib
-
-# Salt for hashing user's answer to store hashed answer in DB
-SALT = 'Cse110'
+import os
 
 class UserCreateSerializer(serializers.ModelSerializer):
   def __init__(self, *args, **kwargs):
@@ -17,13 +15,13 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
   def create(self, data):
     answer = data['answer']
-    data['answer'] = hashlib.md5(str(SALT + answer).encode('utf-8')).hexdigest()
+    data['answer'] = hashlib.md5(str(os.environ.get('SALT') + answer).encode('utf-8')).hexdigest()
     return User.objects.create_user(**data)
 
 class UserGeneralSerializer(serializers.ModelSerializer):
   class Meta:
     model = User
-    exclude = ['password', 'groups', 'user_permissions']
+    exclude = ['password', 'groups', 'user_permissions', 'is_deleted', 'is_staff', 'is_superuser']
 
 class UserUpdateSerializer(serializers.ModelSerializer):
   class Meta:
@@ -38,7 +36,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     if data.get('country_id'): instance.country_id = data.get('country_id')
     if data.get('avatar'): instance.avatar = data.get('avatar')
     if data.get('answer'):
-      instance.answer = hashlib.md5(str(SALT + data.get('answer')).encode('utf-8')).hexdigest()
+      instance.answer = hashlib.md5(str(os.environ.get('SALT') + data.get('answer')).encode('utf-8')).hexdigest()
 
     super(User, instance).save()
     return instance

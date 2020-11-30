@@ -9,7 +9,8 @@ from disaster_broadcaster.models.Post import Post
 from disaster_broadcaster.serializers.Post import (
   PostCreateSerializer,
   PostGeneralSerializer,
-  PostUpdateSerializer
+  PostUpdateSerializer,
+  PostSingleGeneralSerializer
 )
 
 class PostViewset(viewsets.ViewSet):
@@ -46,7 +47,7 @@ class PostViewset(viewsets.ViewSet):
   # GET with id
   def retrieve(self, request, pk=None):
     post = get_object_or_404(Post.objects.all(), pk=pk)
-    serializer = PostGeneralSerializer(post)
+    serializer = PostSingleGeneralSerializer(post)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
   # PATCH

@@ -8,6 +8,10 @@ class FilePath:
     return "news/{0}/{1}".format(instance.id, filename)
 
   @staticmethod
+  def logo(instance, filename):
+    return "org/{0}/{1}".format(instance.id, filename)
+
+  @staticmethod
   def avatar(user, filename):
     return "user/{0}/{1}".format(user.id, filename)
   

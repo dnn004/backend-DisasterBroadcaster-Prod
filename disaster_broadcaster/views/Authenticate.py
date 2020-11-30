@@ -5,9 +5,10 @@ from rest_framework.generics import get_object_or_404
 from rest_framework import status
 from django.http import JsonResponse
 from disaster_broadcaster.models.User import User 
-from disaster_broadcaster.serializers.User import UserGeneralSerializer, SALT
+from disaster_broadcaster.serializers.User import UserGeneralSerializer
 import hashlib
 import json
+import os
 
 @csrf_exempt 
 def AuthenticateUser(request):
@@ -35,7 +36,7 @@ def PasswordReset(request):
   user = get_object_or_404(User, email=email)
 
   answer = data['answer']
-  hashed_answer = hashlib.md5(str(SALT + answer).encode('utf-8')).hexdigest()
+  hashed_answer = hashlib.md5(str(os.environ.get('SALT') + answer).encode('utf-8')).hexdigest()
 
   if user.answer == hashed_answer:
     send_mail(

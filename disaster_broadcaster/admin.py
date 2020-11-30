@@ -118,5 +118,5 @@ class CountryAdmin(admin.ModelAdmin):
 
 @admin.register(Organization)
 class OrganizationAdmin(admin.ModelAdmin):
-  list_display = ('id', 'name', 'address', 'url', 'email',)
+  list_display = ('id', 'name', 'address', 'url', 'email', 'logo',)
   save_on_top = True
