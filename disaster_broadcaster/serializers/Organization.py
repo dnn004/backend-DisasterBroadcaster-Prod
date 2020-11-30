@@ -24,6 +24,7 @@ class OrganizationUpdateSerializer(serializers.ModelSerializer):
     if data.get('address'): instance.address = data.get('address')
     if data.get('url'): instance.url = data.get('url')
     if data.get('email'): instance.email = data.get('email')
+    if data.get('logo'): instance.logo = data.get('logo')
 
     instance.save()
     return instance

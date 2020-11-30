@@ -18,12 +18,7 @@ class CommentViewset(viewsets.ViewSet):
   # GET
   def list(self, request):
     page = request.GET.get('page')
-    post = request.GET.get('post')
     comments = Comment.objects.all()
-
-    # Filter for all comments under a post
-    if post is not None:
-      comments = comments.filter(post_id=post.id)
 
     # Oldest first
     comments = comments.order_by('date_created')

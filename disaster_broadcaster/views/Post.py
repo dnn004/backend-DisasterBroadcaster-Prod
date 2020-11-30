@@ -9,7 +9,8 @@ from disaster_broadcaster.models.Post import Post
 from disaster_broadcaster.serializers.Post import (
   PostCreateSerializer,
   PostGeneralSerializer,
-  PostUpdateSerializer
+  PostUpdateSerializer,
+  PostSingleGeneralSerializer
 )
 
 class PostViewset(viewsets.ViewSet):
@@ -46,7 +47,7 @@ class PostViewset(viewsets.ViewSet):
   # GET with id
   def retrieve(self, request, pk=None):
     post = get_object_or_404(Post.objects.all(), pk=pk)
-    serializer = PostGeneralSerializer(post)
+    serializer = PostSingleGeneralSerializer(post)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
   # PATCH
@@ -56,7 +57,7 @@ class PostViewset(viewsets.ViewSet):
     # Commented out for development easy testing, uncomment in production
     # if request.user != post.user_id:
     #   return Response(data={}, status=status.HTTP_401_UNAUTHORIZED)
-    serializer = PostUpdateSerializer(post, request.data)
+    serializer = PostUpdateSerializer(post, request.data, partial=True)
     if serializer.is_valid(raise_exception=True):
       serializer.save()
     return Response(serializer.data, status=status.HTTP_200_OK)

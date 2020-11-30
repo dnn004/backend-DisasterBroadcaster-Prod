@@ -22,7 +22,7 @@ class CommentGeneralSerializer(serializers.ModelSerializer):
 class CommentUpdateSerializer(serializers.ModelSerializer):
   class Meta:
     model = Comment
-    fields = '__all__'
+    fields = ['comment',]
 
   def update(self, instance:Comment, data):
     if data.get('comment'): instance.comment = data.get('comment')
