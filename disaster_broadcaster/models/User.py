@@ -40,7 +40,7 @@ class User(AbstractBaseUser, PermissionsMixin):
   answer = models.CharField(max_length=120)
 
   # Public Information
-  avatar = models.ImageField(default='default-avatar.jpg', editable=True, upload_to=FilePath.avatar)
+  avatar = models.ImageField(default='default-avatar.png', editable=True, upload_to=FilePath.avatar)
   country_id = models.ForeignKey(Country, null=True, on_delete=models.SET_NULL)
 
   # Bookkeeping Information
