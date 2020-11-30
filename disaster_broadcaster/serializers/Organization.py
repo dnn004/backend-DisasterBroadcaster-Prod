@@ -1,3 +1,5 @@
+import os
+from disaster_broadcaster.bucket_delete import s3_delete
 from rest_framework import serializers
 from disaster_broadcaster.models.Organization import Organization
 
@@ -24,7 +26,10 @@ class OrganizationUpdateSerializer(serializers.ModelSerializer):
     if data.get('address'): instance.address = data.get('address')
     if data.get('url'): instance.url = data.get('url')
     if data.get('email'): instance.email = data.get('email')
-    if data.get('logo'): instance.logo = data.get('logo')
+    if data.get('logo'): 
+      if os.environ.get('DJANGO_DEBUG') == 'False':
+        s3_delete(instance.logo.url)
+      instance.logo = data.get('logo')
 
     instance.save()
     return instance

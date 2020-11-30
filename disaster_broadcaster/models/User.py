@@ -1,7 +1,5 @@
-import os
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractBaseUser,PermissionsMixin
-from disaster_broadcaster.bucket_delete import s3_delete
 from disaster_broadcaster.models.Country import Country
 from django.db import models
 from django.core.validators import RegexValidator
@@ -74,7 +72,4 @@ class User(AbstractBaseUser, PermissionsMixin):
       self.avatar = saved_avatar
       super(User, self).save()
     else:
-      # Delete old avatar from S3
-      if os.environ.get('DJANGO_DEBUG') == 'False':
-        s3_delete('media/user/' + str(self.pk) + '/' + str(self.avatar))
       super(User, self).save()

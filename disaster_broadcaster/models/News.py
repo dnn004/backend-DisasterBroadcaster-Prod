@@ -24,7 +24,4 @@ class News(models.Model):
       self.media = saved_media
       super(News, self).save()
     else:
-      # Delete old media from S3
-      if os.environ.get('DJANGO_DEBUG') == 'False':
-        s3_delete('media/news/' + str(self.pk) + '/' + str(self.media))
       super(News, self).save()
