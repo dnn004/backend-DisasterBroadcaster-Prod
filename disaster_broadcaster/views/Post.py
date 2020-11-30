@@ -56,7 +56,7 @@ class PostViewset(viewsets.ViewSet):
     # Commented out for development easy testing, uncomment in production
     # if request.user != post.user_id:
     #   return Response(data={}, status=status.HTTP_401_UNAUTHORIZED)
-    serializer = PostUpdateSerializer(post, request.data)
+    serializer = PostUpdateSerializer(post, request.data, partial=True)
     if serializer.is_valid(raise_exception=True):
       serializer.save()
     return Response(serializer.data, status=status.HTTP_200_OK)

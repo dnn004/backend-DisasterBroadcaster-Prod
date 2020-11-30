@@ -48,7 +48,7 @@ class NewsViewset(viewsets.ViewSet):
   # PATCH
   def partial_update(self, request, pk=None):
     news = get_object_or_404(News.objects.all(), pk=pk)
-    serializer = NewsUpdateSerializer(news, request.data)
+    serializer = NewsUpdateSerializer(news, request.data, partial=True)
     if serializer.is_valid(raise_exception=True):
       serializer.save()
     return Response(serializer.data, status=status.HTTP_200_OK)

@@ -40,7 +40,7 @@ class OrganizationViewset(viewsets.ViewSet):
   # PATCH
   def partial_update(self, request, pk=None):
     organization = get_object_or_404(Organization.objects.all(), pk=pk)
-    serializer = OrganizationUpdateSerializer(organization, request.data)
+    serializer = OrganizationUpdateSerializer(organization, request.data, partial=True)
     if serializer.is_valid(raise_exception=True):
       serializer.save()
     return Response(serializer.data, status=status.HTTP_200_OK)

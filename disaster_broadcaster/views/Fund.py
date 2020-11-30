@@ -50,7 +50,7 @@ class FundViewset(viewsets.ViewSet):
   # PATCH
   def partial_update(self, request, pk=None):
     fund = get_object_or_404(Fund.objects.all(), pk=pk)
-    serializer = FundUpdateSerializer(fund, request.data)
+    serializer = FundUpdateSerializer(fund, request.data, partial=True)
     if serializer.is_valid(raise_exception=True):
       serializer.save()
     return Response(serializer.data, status=status.HTTP_200_OK)

@@ -40,7 +40,7 @@ class CountryViewset(viewsets.ViewSet):
   # PATCH
   def partial_update(self, request, pk=None):
     country = get_object_or_404(Country.objects.all(), pk=pk)
-    serializer = CountryUpdateSerializer(country, request.data)
+    serializer = CountryUpdateSerializer(country, request.data, partial=True)
     if serializer.is_valid(raise_exception=True):
       serializer.save()
     return Response(serializer.data, status=status.HTTP_200_OK)

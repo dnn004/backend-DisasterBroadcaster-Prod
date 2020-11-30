@@ -35,7 +35,7 @@ class CategoryViewset(viewsets.ViewSet):
   # PATCH
   def partial_update(self, request, pk=None):
     category = get_object_or_404(Category.objects.all(), pk=pk)
-    serializer = CategoryUpdateSerializer(category, request.data)
+    serializer = CategoryUpdateSerializer(category, request.data, partial=True)
     if serializer.is_valid(raise_exception=True):
       serializer.save()
     return Response(serializer.data, status=status.HTTP_200_OK)

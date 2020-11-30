@@ -31,10 +31,12 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     exclude = ['password']
 
   def update(self, instance:User, data):
+    print('update')
     # Verification needs to be either fixed here later, or done in frontend
     if data.get('username'): instance.username = data.get('username')
     if data.get('email'): instance.email = data.get('email')
     if data.get('country_id'): instance.country_id = data.get('country_id')
+    if data.get('avatar'): instance.avatar = data.get('avatar')
     if data.get('answer'):
       instance.answer = hashlib.md5(str(SALT + data.get('answer')).encode('utf-8')).hexdigest()
 

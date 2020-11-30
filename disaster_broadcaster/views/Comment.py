@@ -23,7 +23,7 @@ class CommentViewset(viewsets.ViewSet):
 
     # Filter for all comments under a post
     if post is not None:
-      comments = comments.filter(post_id=post.id)
+      comments = comments.filter(post_id=post)
 
     # Oldest first
     comments = comments.order_by('date_created')
