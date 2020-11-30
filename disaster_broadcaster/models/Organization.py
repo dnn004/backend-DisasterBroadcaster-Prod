@@ -22,7 +22,4 @@ class Organization(models.Model):
       self.logo = saved_logo
       super(Organization, self).save()
     else:
-      # Delete old media from S3
-      if os.environ.get('DJANGO_DEBUG') == 'False':
-        s3_delete('media/org/' + str(self.pk) + "/" + str(self.logo))
       super(Organization, self).save()

@@ -1,4 +1,5 @@
 import os
+import hashlib
 from django.utils.translation import ugettext, ugettext_lazy as _
 
 from django.contrib import admin
@@ -16,8 +17,6 @@ from .models.Category import Category
 from .models.Disaster import Disaster
 from .models.Country import Country
 from .models.Organization import Organization
-
-from disaster_broadcaster.serializers.User import UserCreateSerializer, UserUpdateSerializer
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
@@ -42,28 +41,18 @@ class UserAdmin(admin.ModelAdmin):
   def save_model(self, request, obj, form, change):
     data = request.POST.dict()
 
-    # data['avatar'] is either '' or None
-    # if '', delete so UserCreateSerializer(data=data) doesn't raise init error
-    # if None, actually put in input avatar in obj to pass in
-    if data.get('avatar') == '':
-      del data['avatar']
-    elif data.get('avatar') is None:
-      data['avatar'] = obj.avatar
-
     # change is boolean, True if user update, False if user create
     if not change:
-      serializer = UserCreateSerializer(data=data)
-      if serializer.is_valid(raise_exception=True):
-        serializer.save()
+      obj.set_password(data.get('password'))
+      obj.answer = hashlib.md5(str(os.environ.get('SALT') + data.get('answer')).encode('utf-8')).hexdigest()
+      obj.save()
     else:
       # Delete old avatar from S3
       user = User.objects.get(pk=obj.pk)
       if os.environ.get('DJANGO_DEBUG') == 'False':
-        s3_delete('media/user/' + str(user.id) + '/' + str(user.avatar))
+        s3_delete(user.avatar.url)
 
-      serializer = UserUpdateSerializer(obj, data)
-      if serializer.is_valid(raise_exception=True):
-        serializer.save()
+      obj.save()
 
 class PostInLine(admin.TabularInline):
   model = Post
@@ -81,6 +70,20 @@ class PostAdmin(admin.ModelAdmin):
   list_display = ('id', 'user_id', 'country_id', 'content', 'media', 'date_created',)
   save_on_top = True
 
+  def save_model(self, request, obj, form, change):
+    data = request.POST.dict()
+
+    # change is boolean, True if user update, False if user create
+    if not change:
+      obj.save()
+    else:
+      # Delete old media from S3
+      post = Post.objects.get(pk=obj.pk)
+      if os.environ.get('DJANGO_DEBUG') == 'False':
+        s3_delete(post.media.url)
+
+      obj.save()
+
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
   list_display = ('id', 'user_id', 'post_id', 'comment', 'date_created',)
@@ -95,6 +98,20 @@ class ReactionAdmin(admin.ModelAdmin):
 class NewsAdmin(admin.ModelAdmin):
   list_display = ('id', 'country_id', 'disaster_id', 'url', 'date_created', 'date_added', 'headline', 'content', 'media',)
   save_on_top = True
+
+  def save_model(self, request, obj, form, change):
+    data = request.POST.dict()
+
+    # change is boolean, True if user update, False if user create
+    if not change:
+      obj.save()
+    else:
+      # Delete old media from S3
+      news = News.objects.get(pk=obj.pk)
+      if os.environ.get('DJANGO_DEBUG') == 'False':
+        s3_delete(news.media.url)
+
+      obj.save()
 
 @admin.register(Fund)
 class FundAdmin(admin.ModelAdmin):
@@ -120,3 +137,17 @@ class CountryAdmin(admin.ModelAdmin):
 class OrganizationAdmin(admin.ModelAdmin):
   list_display = ('id', 'name', 'address', 'url', 'email', 'logo',)
   save_on_top = True
+
+  def save_model(self, request, obj, form, change):
+    data = request.POST.dict()
+
+    # change is boolean, True if user update, False if user create
+    if not change:
+      obj.save()
+    else:
+      # Delete old logo from S3
+      org = Organization.objects.get(pk=obj.pk)
+      if os.environ.get('DJANGO_DEBUG') == 'False':
+        s3_delete(org.logo.url)
+
+      obj.save()

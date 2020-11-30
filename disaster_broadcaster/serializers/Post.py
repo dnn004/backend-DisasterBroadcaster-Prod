@@ -1,3 +1,5 @@
+import os
+from disaster_broadcaster.bucket_delete import s3_delete
 from rest_framework import serializers
 from disaster_broadcaster.models.Post import Post
 from disaster_broadcaster.models.User import User
@@ -66,7 +68,10 @@ class PostUpdateSerializer(serializers.ModelSerializer):
   def update(self, instance:Post, data):
     if data.get('country_id'): instance.country_id = data.get('country_id')
     if data.get('content'): instance.content = data.get('content')
-    if data.get('media'): instance.media = data.get('media')
+    if data.get('media'): 
+      if os.environ.get('DJANGO_DEBUG') == 'False':
+        s3_delete(instance.media.url)
+      instance.media = data.get('media')
 
-    super(Post, instance).save()
+    instance.save()
     return instance
