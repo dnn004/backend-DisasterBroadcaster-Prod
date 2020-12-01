@@ -130,7 +130,7 @@ class DisasterAdmin(admin.ModelAdmin):
 
 @admin.register(Country)
 class CountryAdmin(admin.ModelAdmin):
-  list_display = ('id', 'name', 'emergency_url', 'emergency_number',)
+  list_display = ('id', 'name', 'emergency_number',)
   save_on_top = True
 
 @admin.register(Organization)
