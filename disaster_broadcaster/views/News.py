@@ -23,10 +23,10 @@ class NewsViewset(viewsets.ViewSet):
 
     # Filter news by country
     if country_id is not None:
-      news = news.fitler(country_id=country_id)
+      news = news.filter(country_id=country_id)
 
     # Newest first
-    news = news.order_by('-date_added')
+    news = news.order_by('-date_created')
     if page is not None:
       news = paginate(news, page)
     serializer = NewsGeneralSerializer(news, many=True)
