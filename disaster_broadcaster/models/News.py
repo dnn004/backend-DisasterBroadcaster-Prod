@@ -13,15 +13,5 @@ class News(models.Model):
   date_added = models.DateTimeField(auto_now_add=True, null=True)
   headline = models.CharField(max_length=500)
   content = models.TextField()
-  media = models.ImageField(upload_to=FilePath.news_upload, null=True)
+  media = models.URLField(default='https://increasify.com.au/wp-content/uploads/2016/08/default-image.png', max_length=1000)
 
-  # Override save
-  def save(self, *args, **kwargs):
-    if self.pk is None:
-      saved_media = self.media
-      self.media = None
-      super(News, self).save(*args, **kwargs)
-      self.media = saved_media
-      super(News, self).save()
-    else:
-      super(News, self).save()

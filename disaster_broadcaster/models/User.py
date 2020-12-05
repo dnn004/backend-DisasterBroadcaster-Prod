@@ -40,7 +40,7 @@ class User(AbstractBaseUser, PermissionsMixin):
   answer = models.CharField(max_length=120)
 
   # Public Information
-  avatar = models.ImageField(default='default-avatar.png', editable=True, upload_to=FilePath.avatar)
+  avatar = models.URLField(default='https://www.flaticon.com/svg/static/icons/svg/3815/3815448.svg', max_length=1000)
   country_id = models.ForeignKey(Country, null=True, on_delete=models.SET_NULL)
 
   # Bookkeeping Information
@@ -62,14 +62,3 @@ class User(AbstractBaseUser, PermissionsMixin):
   
   def check_password_auth(self, password):
     return self.check_password(password)
-
-  # Override save
-  def save(self, *args, **kwargs):
-    if self.pk is None:
-      saved_avatar = self.avatar
-      self.avatar = None
-      super(User, self).save(*args, **kwargs)
-      self.avatar = saved_avatar
-      super(User, self).save()
-    else:
-      super(User, self).save()

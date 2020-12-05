@@ -47,11 +47,6 @@ class UserAdmin(admin.ModelAdmin):
       obj.answer = hashlib.md5(str(os.environ.get('SALT') + data.get('answer')).encode('utf-8')).hexdigest()
       obj.save()
     else:
-      # Delete old avatar from S3
-      user = User.objects.get(pk=obj.pk)
-      if os.environ.get('DJANGO_DEBUG') == 'False':
-        s3_delete(user.avatar.url)
-
       obj.save()
 
 class PostInLine(admin.TabularInline):
@@ -98,20 +93,6 @@ class ReactionAdmin(admin.ModelAdmin):
 class NewsAdmin(admin.ModelAdmin):
   list_display = ('id', 'country_id', 'disaster_id', 'url', 'date_created', 'date_added', 'headline', 'content', 'media',)
   save_on_top = True
-
-  def save_model(self, request, obj, form, change):
-    data = request.POST.dict()
-
-    # change is boolean, True if user update, False if user create
-    if not change:
-      obj.save()
-    else:
-      # Delete old media from S3
-      news = News.objects.get(pk=obj.pk)
-      if os.environ.get('DJANGO_DEBUG') == 'False':
-        s3_delete(news.media.url)
-
-      obj.save()
 
 @admin.register(Fund)
 class FundAdmin(admin.ModelAdmin):
