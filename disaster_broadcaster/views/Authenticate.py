@@ -39,6 +39,7 @@ def PasswordReset(request):
   hashed_answer = hashlib.md5(str(os.environ.get('SALT') + answer).encode('utf-8')).hexdigest()
 
   if user.answer == hashed_answer:
+    login(request, user)
     send_mail(
       subject = 'Password Reset',
       message = 'This email has been sent because a password reset request ' +
