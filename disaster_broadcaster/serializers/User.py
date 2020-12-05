@@ -34,10 +34,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     if data.get('username'): instance.username = data.get('username')
     if data.get('email'): instance.email = data.get('email')
     if data.get('country_id'): instance.country_id = data.get('country_id')
-    if data.get('avatar'): 
-      if os.environ.get('DJANGO_DEBUG') == 'False':
-        s3_delete(instance.avatar.url)
-      instance.avatar = data.get('avatar')
+    if data.get('avatar'): instance.avatar = data.get('avatar')
     if data.get('answer'):
       instance.answer = hashlib.md5(str(os.environ.get('SALT') + data.get('answer')).encode('utf-8')).hexdigest()
 
