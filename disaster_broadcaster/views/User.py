@@ -80,7 +80,7 @@ class UserViewset(viewsets.ViewSet):
     user.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
-  @action(detail=False)
+  @action(detail=False, methods=['post'])
   def current_user(self, request):
     try:
       user = Token.objects.get(key=request.data.get('token')).user
