@@ -3,8 +3,9 @@ from django.core.mail import send_mail
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.generics import get_object_or_404
 from rest_framework import status
+from rest_framework.authtoken.models import Token
 from django.http import JsonResponse
-from disaster_broadcaster.models.User import User 
+from disaster_broadcaster.models.User import User
 from disaster_broadcaster.serializers.User import UserGeneralSerializer
 import hashlib
 import json
@@ -19,7 +20,11 @@ def AuthenticateUser(request):
   if user.check_password(password):
     login(request, user)
     serializer = UserGeneralSerializer(user)
-    return JsonResponse(data=serializer.data,status=status.HTTP_200_OK)
+    token, created = Token.objects.get_or_create(user=user)
+    return JsonResponse(data={
+      'user': serializer.data,
+      'token': token.key
+    },status=status.HTTP_200_OK)
   else:
     return JsonResponse(data={}, status=status.HTTP_401_UNAUTHORIZED)
 

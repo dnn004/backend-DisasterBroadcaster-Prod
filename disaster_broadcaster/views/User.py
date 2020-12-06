@@ -5,6 +5,7 @@ from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from rest_framework.authtoken.models import Token
 from disaster_broadcaster.paginate import paginate
 from disaster_broadcaster.models.User import User
 from disaster_broadcaster.serializers.User import (
@@ -32,9 +33,12 @@ class UserViewset(viewsets.ViewSet):
   # POST
   def create(self, request):
     serializer = UserCreateSerializer(data=request.data)
-    if serializer.is_valid(raise_exception=True):
-      serializer.save()
-    return Response(serializer.data, status=status.HTTP_201_CREATED)
+    serializer.is_valid(raise_exception=True)
+    user = serializer.save()
+    return Response({
+      'user': serializer.data,
+      'token': Token.objects.create(user=user).key
+    }, status=status.HTTP_201_CREATED)
 
   # GET with id
   def retrieve(self, request, pk=None):
@@ -78,9 +82,9 @@ class UserViewset(viewsets.ViewSet):
 
   @action(detail=False)
   def current_user(self, request):
-    if request.user.is_anonymous:
-      return Response({}, status=status.HTTP_404_NOT_FOUND)
-    else:
-      user = request.user
+    try:
+      user = Token.objects.get(key=request.data.get('token')).user
       serializer = UserGeneralSerializer(user)
       return Response(serializer.data, status=status.HTTP_200_OK)
+    except:
+      return Response({}, status=status.HTTP_404_NOT_FOUND)
