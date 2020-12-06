@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from rest_framework import status, viewsets
+from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -65,7 +66,6 @@ class UserViewset(viewsets.ViewSet):
         serializer.save()
       return Response({}, status=status.HTTP_200_OK)
 
-
   # DELETE
   def destroy(self, request, pk=None):
     user = get_object_or_404(self.get_queryset(), pk=pk)
@@ -75,3 +75,12 @@ class UserViewset(viewsets.ViewSet):
     #   return Response(data={}, status=status.HTTP_401_UNAUTHORIZED)
     user.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+  @action(detail=False)
+  def current_user(self, request):
+    if request.user.is_anonymous:
+      return Response({}, status=status.HTTP_404_NOT_FOUND)
+    else:
+      user = request.user
+      serializer = UserGeneralSerializer(user)
+      return Response(serializer.data, status=status.HTTP_200_OK)

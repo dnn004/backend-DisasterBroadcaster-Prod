@@ -39,7 +39,7 @@ class PostSingleGeneralSerializer(serializers.ModelSerializer):
       display['id'] = comment.get('id')
       display['username'] = user.username
       display['avatar'] = user.avatar
-      display['date_created'] = comment.get('dated_created')
+      display['date_created'] = comment.get('date_created')
       display['comment'] = comment.get('comment')
       return_comments.append(display)
     return return_comments
