@@ -6,6 +6,8 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from disaster_broadcaster.paginate import paginate
 from disaster_broadcaster.models.Post import Post
+from rest_framework.decorators import action
+from rest_framework.authtoken.models import Token
 from disaster_broadcaster.serializers.Post import (
   PostCreateSerializer,
   PostGeneralSerializer,
@@ -71,3 +73,13 @@ class PostViewset(viewsets.ViewSet):
     #   return Response(data={}, status=status.HTTP_401_UNAUTHORIZED)
     post.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+  @action(detail=False, methods=['post'])
+  def own_post(self, request):
+    try:
+      user = Token.objects.get(key=request.data.get('token')).user
+      posts = Post.objects.filter(user_id=user.id)
+      serializer = PostGeneralSerializer(posts, many=True)
+      return Response(serializer.data, status=status.HTTP_200_OK)
+    except:
+      return Response({}, status=status.HTTP_404_NOT_FOUND)
