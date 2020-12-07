@@ -54,6 +54,9 @@ def PasswordReset(request):
       recipient_list = [email, ],
       fail_silently=False
     )
-    return JsonResponse(data={}, status=status.HTTP_200_OK)
+    token, created = Token.objects.get_or_create(user=user)
+    return JsonResponse(data={
+      "token": token.key
+    }, status=status.HTTP_200_OK)
   else:
     return JsonResponse(data={}, status=status.HTTP_401_UNAUTHORIZED)
