@@ -32,7 +32,7 @@ class PostSingleGeneralSerializer(serializers.ModelSerializer):
 
   def get_comments(self, instance):
     return_comments = []
-    comments = Comment.objects.filter(post_id=instance.id).values('id', 'user_id', 'comment', 'date_created')
+    comments = Comment.objects.filter(post_id=instance.id).values('id', 'user_id', 'comment', 'date_created').order_by('-date_created')
     for comment in comments:
       display = {}
       user = User.objects.get(pk=comment.get('user_id'))
@@ -68,10 +68,7 @@ class PostUpdateSerializer(serializers.ModelSerializer):
   def update(self, instance:Post, data):
     if data.get('country_id'): instance.country_id = data.get('country_id')
     if data.get('content'): instance.content = data.get('content')
-    if data.get('media'): 
-      if os.environ.get('DJANGO_DEBUG') == 'False':
-        s3_delete(instance.media.url)
-      instance.media = data.get('media')
+    if data.get('media'): instance.media = data.get('media')
 
     instance.save()
     return instance

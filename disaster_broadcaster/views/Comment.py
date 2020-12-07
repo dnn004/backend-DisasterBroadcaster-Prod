@@ -20,8 +20,8 @@ class CommentViewset(viewsets.ViewSet):
     page = request.GET.get('page')
     comments = Comment.objects.all()
 
-    # Oldest first
-    comments = comments.order_by('date_created')
+    # Newest first
+    comments = comments.order_by('-date_created')
     if page is not None:
       comments = paginate(comments, page)
     serializer = CommentGeneralSerializer(comments, many=True)
