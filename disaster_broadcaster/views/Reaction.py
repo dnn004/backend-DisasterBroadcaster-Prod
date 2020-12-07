@@ -16,6 +16,16 @@ class ReactionViewset(viewsets.ViewSet):
 
   # GET
   def list(self, request):
+    user_id = request.GET.get('user')
+    post_id = request.GET.get('post')
+    if user_id is not None and post_id is not None:
+      try:
+        reaction = Reaction.objects.get(user_id=user_id, post_id=post_id)
+        return Response(data={
+          "id": reaction.id
+        }, status=status.HTTP_200_OK)
+      except:
+        return Response(data={}, status=status.HTTP_404_NOT_FOUND)
     serializer = ReactionGeneralSerializer(Reaction.objects.all(), many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
