@@ -40,7 +40,7 @@ class User(AbstractBaseUser, PermissionsMixin):
   answer = models.CharField(max_length=120)
 
   # Public Information
-  avatar = models.URLField(default='https://www.flaticon.com/svg/static/icons/svg/3815/3815448.svg', max_length=1000)
+  avatar = models.URLField(default='https://www.flaticon.com/svg/static/icons/svg/3815/3815323.svg', max_length=1000)
   country_id = models.ForeignKey(Country, null=True, on_delete=models.SET_NULL)
 
   # Bookkeeping Information
