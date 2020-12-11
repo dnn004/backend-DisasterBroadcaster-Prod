@@ -50,7 +50,7 @@ def PasswordReset(request):
       message = 'This email has been sent because a password reset request ' +
       'has been made by an account associated with this email address. ' +
       '\n\nPlease follow the link to reset your password: https://disaster-broadcaster-official.herokuapp.com/createnewpw/' +
-      token,
+      str(token),
       from_email = 'disaster.broadcaster@gmail.com',
       recipient_list = [email, ],
       fail_silently=False
