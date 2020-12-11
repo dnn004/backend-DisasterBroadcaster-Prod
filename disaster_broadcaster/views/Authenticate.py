@@ -42,19 +42,19 @@ def PasswordReset(request):
 
   answer = data['answer']
   hashed_answer = hashlib.md5(str(os.environ.get('SALT') + answer).encode('utf-8')).hexdigest()
-
+  token, created = Token.objects.get_or_create(user=user)
   if user.answer == hashed_answer:
     login(request, user)
     send_mail(
       subject = 'Password Reset',
       message = 'This email has been sent because a password reset request ' +
       'has been made by an account associated with this email address. ' +
-      '\n\nPlease follow the link to reset your password: \n\n',
+      '\n\nPlease follow the link to reset your password: https://disaster-broadcaster-official.herokuapp.com/createnewpw/{token} \n\n',
       from_email = 'disaster.broadcaster@gmail.com',
       recipient_list = [email, ],
       fail_silently=False
     )
-    token, created = Token.objects.get_or_create(user=user)
+    
     return JsonResponse(data={
       "token": token.key
     }, status=status.HTTP_200_OK)
