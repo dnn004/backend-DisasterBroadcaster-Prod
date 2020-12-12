@@ -78,7 +78,7 @@ class PostViewset(viewsets.ViewSet):
   def own_post(self, request):
     try:
       user = Token.objects.get(key=request.data.get('token')).user
-      posts = Post.objects.filter(user_id=user.id)
+      posts = Post.objects.filter(user_id=user.id).order_by('-date_created')
       serializer = PostGeneralSerializer(posts, many=True)
       return Response(serializer.data, status=status.HTTP_200_OK)
     except:
